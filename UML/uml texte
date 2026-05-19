@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Viewer (User)" as user
+
+rectangle "Information System - Movie/Serie Rental" {
+    usecase "Authenticate (Login)" as UC_Auth
+    usecase "Check Wallet Balance" as UC_Balance
+    usecase "Browse Media" as UC_Browse
+    usecase "View Media Details" as UC_Details
+    usecase "Rent a Movie or Serie" as UC_Rent
+
+    note right of UC_Rent
+        Validates balance
+        Creates Transaction record
+        Updates isReserved status
+    end note
+}
+
+user --> UC_Auth
+user --> UC_Balance
+user --> UC_Browse
+user --> UC_Details
+user --> UC_Rent
+
+UC_Details ..> UC_Browse : <<extend>>
+@endum

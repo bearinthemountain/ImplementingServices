@@ -1,0 +1,56 @@
+
+package "Presentation / Security Layer" {
+    class Viewer {
+        - id : Long
+        - firstName : String
+        - lastName : String
+        - email : String
+        - passwordHash : String
+        - balance : double
+        --
+        + rentMedia(media: Media): void
+    }
+}
+
+package "Persistence Layer (JPA)" {
+    abstract class Media {
+        - id : Long
+        - title : String
+        - director : String
+        - price : double
+        - isReserved : boolean
+    }
+
+    class Movie {
+        - duration : int
+    }
+
+    class Serie {
+        - seasons : int
+        - episodes : int
+    }
+
+    class Category {
+        - id : Long
+        - name : String
+    }
+
+    class Transaction {
+        - id : Long
+        - rentalDate : LocalDateTime
+        - appliedPrice : double
+    }
+}
+
+' Inheritance relations
+Media <|-- Movie
+Media <|-- Serie
+
+' Association relations
+Media "*" o-- "1" Category : belongs to >
+
+' Joint Entity / Transaction relations
+Viewer "1" -- "*" Transaction
+Transaction "*" -- "1" Media
+
+@endum

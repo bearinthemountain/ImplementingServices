@@ -11,19 +11,32 @@ import jakarta.persistence.OneToMany;
 
 
 @Entity
-public class Client {
+public class Viewer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
 	private String lastname;
 	private String firstname;
+	private String email;
+	private double balance;
 
-	// relations
-	@OneToMany(mappedBy = "owner")
-	private List<Account> accounts;
-	
-	// id
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -47,26 +60,14 @@ public class Client {
 		this.lastname = lastname;
 	}
 
-	// accounts (From Account)
-	public List<Account> getAccounts() {
-		return accounts;
-	}
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
-	}
-	
-	// helper methods
-	public void addAccount(Account a) {
-		accounts.add(a);
-		a.setOwner(this);
-	}
 
-	// constructors
-	public Client() {
-	}
-	public Client(String firstname, String lastname) {
+
+	public Viewer(){};
+	public Viewer(String lastname, String firstname, String email, double balance) {
 		this.lastname = lastname;
 		this.firstname = firstname;
+		this.email = email;
+		this.balance = balance;
 	}
 
 	@Override
