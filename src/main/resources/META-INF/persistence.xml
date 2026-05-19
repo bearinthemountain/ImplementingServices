@@ -5,7 +5,7 @@
              version="3.0">
             
 <!-- 	For use with the application server -->
-	<persistence-unit name="bankPU">
+	<persistence-unit name="MarmottePU">
 		<jta-data-source>java:/labsDS</jta-data-source>
 		<class>ch.hevs.businessobject.Viewer</class>
 		<class>ch.hevs.businessobject.Category</class>
@@ -22,8 +22,8 @@
 		</properties>
 	</persistence-unit>
              
-<!-- 	For use with JUnit to populate the BD -->	            
-    <persistence-unit name="bankPU_unitTest">
+<!-- 	For use with JUnit to populate the BD -->
+    <persistence-unit name="MarmottePU_unitTest">
 	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     	<class>ch.hevs.businessobject.Viewer</class>
 		<class>ch.hevs.businessobject.Category</class>

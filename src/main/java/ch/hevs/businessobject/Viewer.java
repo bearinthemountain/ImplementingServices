@@ -44,7 +44,6 @@ public class Viewer {
 		this.id = id;
 	}
 
-	// firstname
 	public String getFirstname() {
 		return firstname;
 	}
@@ -52,7 +51,6 @@ public class Viewer {
 		this.firstname = firstname;
 	}
 	
-	// lastname
 	public String getLastname() {
 		return lastname;
 	}

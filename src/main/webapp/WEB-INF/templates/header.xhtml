@@ -1,8 +1,24 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-<div style="width:100%;font-size:36px;line-height:48px;background-color:navy;color:white">BANK GENEVA</div>
-<br></br>
-</body>
-</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <header class="border-b border-gray-800 bg-[#1E1E1E]/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🍿</span>
+                <h1 class="text-2xl font-black tracking-wider text-red-500 uppercase">
+                    MediaLand
+                </h1>
+            </div>
+
+            <nav class="flex items-center space-x-8">
+                <h:link value="Rental Terminal" outcome="catalog"
+                        class="text-sm font-semibold text-gray-300 hover:text-red-500 transition duration-200"/>
+            </nav>
+
+        </div>
+    </header>
+
+</ui:composition>

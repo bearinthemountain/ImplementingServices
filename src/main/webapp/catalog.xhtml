@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div class="max-w-2xl mx-auto bg-[#1E1E1E] rounded-2xl border border-gray-800 p-8 shadow-2xl">
+
+            <div class="mb-8 text-center">
+                <span class="text-4xl">🍿</span>
+                <h2 class="text-3xl font-extrabold tracking-tight text-white mt-3">Rental Terminal</h2>
+                <p class="text-gray-400 text-sm mt-1">Select a viewer profile and the media asset to rent.</p>
+            </div>
+
+            <h:form id="rentalForm">
+                <div class="space-y-6">
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                            Select Viewer Profile
+                        </label>
+                        <h:selectOneMenu value="#{rentalBean.selectedViewerId}"
+                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition cursor-pointer">
+                            <f:selectItem itemLabel="-- Choose a Viewer --" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{rentalBean.viewers}" var="v"
+                                           itemLabel="#{v.firstName} #{v.lastName} (Wallet: $#{v.balance})" itemValue="#{v.id}" />
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                            Select Movie or Serie
+                        </label>
+                        <h:selectOneMenu value="#{rentalBean.selectedMediaId}"
+                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition cursor-pointer">
+                            <f:selectItem itemLabel="-- Choose a Media --" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{rentalBean.medias}" var="m"
+                                           itemLabel="#{m.title} - #{m.director} ($#{m.price})" itemValue="#{m.id}" />
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div class="pt-4">
+                        <h:commandButton value="Confirm and Rent Content"
+                                         action="#{rentalBean.performRental()}"
+                                         styleClass="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl text-sm transition shadow-lg cursor-pointer text-center block border-none uppercase tracking-wider font-semibold" />
+                    </div>
+
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

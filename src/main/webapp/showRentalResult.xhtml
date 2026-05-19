@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div class="max-w-md mx-auto bg-[#1E1E1E] rounded-2xl border border-gray-800 p-8 shadow-2xl text-center">
+
+            <h:panelGroup rendered="#{rentalBean.transactionResult.contains('succès')}" layout="block">
+                <div class="w-16 h-16 bg-green-950 border border-green-700 rounded-full flex items-center justify-center mx-auto text-2xl text-green-400 mb-4 animate-pulse">
+                    ✓
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Transaction Approved</h3>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not rentalBean.transactionResult.contains('succès')}" layout="block">
+                <div class="w-16 h-16 bg-red-950 border border-red-700 rounded-full flex items-center justify-center mx-auto text-2xl text-red-400 mb-4">
+                    ✕
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Transaction Declined</h3>
+            </h:panelGroup>
+
+            <p class="text-gray-300 text-sm my-4 px-2 leading-relaxed">
+                #{rentalBean.transactionResult}
+            </p>
+
+            <div class="mt-8">
+                <h:link value="Return to Terminal" outcome="catalog"
+                        class="block w-full bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold py-2.5 px-4 rounded-xl text-sm transition border border-gray-700 text-center"/>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
