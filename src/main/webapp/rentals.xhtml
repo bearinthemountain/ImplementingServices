@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition template="/template.xhtml"
+<ui:composition template="/WEB-INF/templates/BasicTemplate.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -11,7 +11,7 @@
             <p class="text-gray-400 text-sm mt-1">Track your remaining watch time for rented movies and series.</p>
         </div>
 
-        <h:panelGroup rendered="#{empty mediaBean.myActiveRentals}" layout="block"
+        <h:panelGroup rendered="#{empty rentalBean.myActiveRentals}" layout="block"
                       class="bg-[#1E1E1E] border border-gray-800 rounded-xl p-8 text-center">
             <h3 class="text-lg font-bold text-gray-300">No active rentals found</h3>
             <p class="text-gray-500 text-sm mt-1 mb-4">You haven't rented any content yet.</p>
@@ -19,7 +19,7 @@
                     class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition"/>
         </h:panelGroup>
 
-        <h:panelGroup rendered="#{not empty mediaBean.myActiveRentals}" layout="block"
+        <h:panelGroup rendered="#{not empty rentalBean.myActiveRentals}" layout="block"
                       class="bg-[#1E1E1E] border border-gray-800 rounded-xl overflow-hidden shadow-xl">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -32,7 +32,7 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-800/60 text-sm">
-                <ui:repeat value="#{mediaBean.myActiveRentals}" var="tx">
+                <ui:repeat value="#{rentalBean.myActiveRentals}" var="tx">
                     <tr class="hover:bg-gray-800/30 transition">
                         <td class="p-4 pl-6">
                             <span class="font-bold text-white block">#{tx.media.title}</span>

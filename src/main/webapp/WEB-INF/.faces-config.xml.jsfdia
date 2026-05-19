@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PROCESS model-entity="JSFProcess">
 
- <PROCESS-ITEM NAME="rules:#welcomeRental.xhtml" PATH="/welcomeRental.xhtml"
+ <PROCESS-ITEM NAME="rules:#catalog.xhtml" PATH="/catalog.xhtml"
   SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:#welcomeRental.xhtml:0" NAME="item"
-   PATH="/welcomeRental.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="rentalForm::#rentalForm.xhtml"
-    NAME="output" PATH="/rentalForm.xhtml"
-    TARGET="rules:#rentalForm.xhtml" TITLE="rentalForm" model-entity="JSFProcessItemOutput"/>
+  <PROCESS-ITEM ID="rules:#catalog.xhtml:0" NAME="item"
+   PATH="/catalog.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="rentals::#rentals.xhtml"
+    NAME="output" PATH="/rentals.xhtml"
+    TARGET="rules:#rentals.xhtml" TITLE="rentals" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
 
- <PROCESS-ITEM NAME="rules:#rentalForm.xhtml"
-  PATH="/rentalForm.xhtml" SHAPE="240,33,0,0" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:#rentalForm.xhtml:0" NAME="item"
-   PATH="/rentalForm.xhtml" model-entity="JSFProcessItem">
+ <PROCESS-ITEM NAME="rules:#rentals.xhtml"
+  PATH="/rentals.xhtml" SHAPE="240,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#rentals.xhtml:0" NAME="item"
+   PATH="/rentals.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
     ID="#{rentalBean.performRental}::#showRentalResult.xhtml"
     NAME="output" PATH="/showRentalResult.xhtml"
