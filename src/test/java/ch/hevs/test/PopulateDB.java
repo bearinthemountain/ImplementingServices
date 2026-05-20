@@ -1,12 +1,13 @@
 package ch.hevs.test;
 
 import java.sql.SQLException;
+
+import ch.hevs.businessobject.User;
 import org.junit.Test;
 
 import ch.hevs.businessobject.Category;
 import ch.hevs.businessobject.Movie;
 import ch.hevs.businessobject.Serie;
-import ch.hevs.businessobject.Viewer;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -63,11 +64,27 @@ public class PopulateDB extends TestCase {
 			em.persist(s2);
 			em.persist(s3);
 
-			// 4. Création des Viewers (Spectateurs)
-			// Ajusté selon le constructeur : firstname, lastname, email, password
-			Viewer c1 = new Viewer("Luc", "Dumoulin", "luc@dumoulin.com", 100);
-			Viewer c2 = new Viewer("Michel", "Platini", "michel@platini.com", 100);
-			Viewer c3 = new Viewer("Jean-Pierre", "Papin", "papin@jp.com", 1000);
+			// 4. Création des Utilisateurs (Viewers) avec mots de passe sécurisés
+
+			// Instanciation de l'algorithme PBKDF2 par défaut de Jakarta
+			com.sun.enterprise.security.ee.authentication.PredefinedPbkdf2PasswordHashImpl passwordHasher =
+					new com.sun.enterprise.security.ee.authentication.PredefinedPbkdf2PasswordHashImpl();
+
+			// Configuration standard requise pour correspondre à Pbkdf2PasswordHash.class
+			java.util.Map<String, String> config = new java.util.HashMap<>();
+			config.put("Pbkdf2PasswordHash.Iterations", "2048");
+			config.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA256");
+			passwordHasher.initialize(config);
+
+			// Hachage des mots de passe en clair
+			String hashLuc = passwordHasher.generate("password123".toCharArray());
+			String hashMichel = passwordHasher.generate("admin2026".toCharArray());
+			String hashJean = passwordHasher.generate("compta456".toCharArray());
+
+			// Création des objets avec le constructeur mis à jour (nom, prénom, email, solde, mot de passe, rôle)
+			User c1 = new User("Dumoulin", "Luc", "luc@dumoulin.com", 100.0, hashLuc, "client");
+			User c2 = new User("Platini", "Michel", "michel@platini.com", 100.0, hashMichel, "manager");
+			User c3 = new User("Papin", "Jean-Pierre", "papin@jp.com", 1000.0, hashJean, "accountant");
 
 			em.persist(c1);
 			em.persist(c2);

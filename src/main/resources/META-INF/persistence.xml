@@ -7,12 +7,12 @@
 <!-- 	For use with the application server -->
 	<persistence-unit name="MarmottePU">
 		<jta-data-source>java:/labsDS</jta-data-source>
-		<class>ch.hevs.businessobject.Viewer</class>
+		<class>ch.hevs.businessobject.User</class>
 		<class>ch.hevs.businessobject.Category</class>
 		<class>ch.hevs.businessobject.Media</class>
 		<class>ch.hevs.businessobject.Movie</class>
 		<class>ch.hevs.businessobject.Serie</class>
-		<class>ch.hevs.businessobject.Transaction</class>
+		<class>ch.hevs.businessobject.Rental</class>
 		<properties>
 			<property name="hibernate.cache.use_second_level_cache" value="true" />
 			<property name="hibernate.cache.use_query_cache" value="true" />
@@ -25,12 +25,12 @@
 <!-- 	For use with JUnit to populate the BD -->
     <persistence-unit name="MarmottePU_unitTest">
 	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    	<class>ch.hevs.businessobject.Viewer</class>
+    	<class>ch.hevs.businessobject.User</class>
 		<class>ch.hevs.businessobject.Category</class>
 		<class>ch.hevs.businessobject.Media</class>
 		<class>ch.hevs.businessobject.Movie</class>
 		<class>ch.hevs.businessobject.Serie</class>
-		<class>ch.hevs.businessobject.Transaction</class>
+		<class>ch.hevs.businessobject.Rental</class>
 		<properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/DB"/>

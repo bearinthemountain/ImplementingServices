@@ -41,4 +41,23 @@
     <welcome-file>catalog.xhtml</welcome-file>
   </welcome-file-list>
 
+  <security-role>
+    <description>Users with an account</description>
+    <role-name>Users</role-name>
+  </security-role>
+  <security-role>
+    <role-name>Visitor</role-name>
+    <description>WebSite visitor</description>
+  </security-role>
+  <security-role>
+    <role-name>Admin</role-name>
+    <description>Administrator access</description>
+  </security-role>
+
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>MarmotteRealm</realm-name>
+  </login-config>
+  
+
 </web-app>

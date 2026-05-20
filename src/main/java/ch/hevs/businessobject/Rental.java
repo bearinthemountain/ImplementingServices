@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Transaction {
+public class Rental {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +20,14 @@ public class Transaction {
     @Column(nullable = false)
     private double appliedPrice;
 
-
-    public Transaction() {
+    public Rental() {
     }
 
-    public Transaction(LocalDateTime rentalStart, LocalDateTime rentalEnd, double appliedPrice, Viewer viewer, Media media) {
+    public Rental(LocalDateTime rentalStart, LocalDateTime rentalEnd, double appliedPrice, User user, Media media) {
         this.rentalStart = rentalStart;
         this.rentalEnd = rentalEnd;
         this.appliedPrice = appliedPrice;
-        this.viewer = viewer;
+        this.user = user;
         this.media = media;
     }
 
@@ -36,7 +35,7 @@ public class Transaction {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "viewer_id", nullable = false)
-    private Viewer viewer;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id", nullable = false)
@@ -78,12 +77,12 @@ public class Transaction {
         this.appliedPrice = appliedPrice;
     }
 
-    public Viewer getViewer() {
-        return viewer;
+    public User getViewer() {
+        return user;
     }
 
-    public void setViewer(Viewer viewer) {
-        this.viewer = viewer;
+    public void setViewer(User user) {
+        this.user = user;
     }
 
     public Media getMedia() {
