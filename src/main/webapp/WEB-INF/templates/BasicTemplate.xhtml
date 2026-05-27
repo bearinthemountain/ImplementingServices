@@ -4,7 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-    <title>MediaLand - Premium Streaming</title>
+    <title>MarmotteMovie</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -24,15 +24,25 @@
 
     <header class="border-b border-gray-800 bg-[#1E1E1E]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black tracking-wider text-red-500 uppercase">MarmotteMovie</h1>
+            <h:link outcome="catalog" styleClass="text-2xl font-black tracking-wider text-red-500 uppercase no-underline">MarmotteMovie</h:link>
             <nav class="flex items-center space-x-6">
-                <h:link value="Catalog" outcome="catalog" class="text-sm font-semibold hover:text-red-500 transition"/>
-                <div class="bg-gray-800 px-4 py-2 rounded-full flex items-center space-x-2">
+                <h:link value="Catalogee" outcome="catalog"
+                        styleClass="text-sm font-semibold text-gray-300 hover:text-red-500 transition"/>
+                <h:link value="My Rentals" outcome="rentals"
+                        styleClass="text-sm font-semibold text-gray-300 hover:text-red-500 transition"/>
+                <h:panelGroup rendered="#{request.isUserInRole('manager')}">
+                    <h:link value="Admin Panel" outcome="admin"
+                            styleClass="text-sm font-semibold text-yellow-400 hover:text-yellow-300 transition"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{rentalBean.loggedInUser != null}"
+                              styleClass="bg-gray-800 px-4 py-2 rounded-full flex items-center space-x-2">
+                    <span class="text-xs text-gray-400">#{rentalBean.loggedInUser.firstname} #{rentalBean.loggedInUser.lastname}</span>
+                    <span class="text-xs text-gray-600">|</span>
                     <span class="text-xs text-gray-400">Wallet:</span>
                     <span class="text-sm font-bold text-green-400">
-                        $#{mediaBean.currentViewer.balance}
+                        CHF #{rentalBean.loggedInUser.balance}
                     </span>
-                </div>
+                </h:panelGroup>
             </nav>
         </div>
     </header>

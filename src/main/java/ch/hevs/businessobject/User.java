@@ -2,98 +2,71 @@ package ch.hevs.businessobject;
 
 import jakarta.persistence.*;
 
-// 1. SUPPRESSION des anciens imports inutiles/faux (javax.swing et javax.management)
+import java.math.BigDecimal;
 
+/**
+ * JPA entity representing an application user (viewer or administrator).
+ * <p>
+ * The table is explicitly named {@code APPLICATION_USER} because {@code USER} is a
+ * reserved SQL keyword on most databases (Derby, PostgreSQL, MySQL, etc.), which would
+ * cause DDL generation to fail without an explicit name override.
+ * </p>
+ * <p>
+ * The {@code role} and {@code password} columns intentionally have no JPA mapping.
+ * WildFly's login module reads them directly from SQL to handle authentication and
+ * enforce the security constraints declared in {@code web.xml}. Application code should
+ * check roles via {@code HttpServletRequest.isUserInRole()} or {@code @RolesAllowed}
+ * rather than exposing credentials through this entity.
+ * </p>
+ */
 @Entity
-@Table(name = "APPLICATION_USER") // Optionnel mais fortement recommandé car "USER" est un mot réservé en SQL
+@Table(name = "APPLICATION_USER")
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	private long id;
-	private String lastname;
-	private String firstname;
-	private String email;
-	private double balance;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private long id;
 
-	// Si tu n'as pas créé d'objet ou d'Enum 'Role', utilise simplement un String !
-	// C'est le plus simple pour débuter et stocker "client", "manager", etc.
-	private String role;
+    private String lastname;
+    private String firstname;
 
-	// Variable String pour stocker le mot de passe haché sécurisé
-	private String password;
+    /** Current account balance in CHF, debited on each successful rental. */
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal balance;
 
-	// --- CONSTRUCTEURS ---
 
-	public User() {}
+    /** Default no-arg constructor required by JPA. */
+    public User() {}
 
-	// Mise à jour du constructeur pour accepter le mot de passe et le rôle à la création [cite: 46]
-	public User(String lastname, String firstname, String email, double balance, String password, String role) {
-		this.lastname = lastname;
-		this.firstname = firstname;
-		this.email = email;
-		this.balance = balance;
-		this.password = password; // Correction : On affecte le paramètre reçu
-		this.role = role;         // Correction : On affecte le paramètre reçu
-	}
+    /**
+     * Creates a fully initialised user.
+     *
+     * @param lastname  family name
+     * @param firstname given name
+     * @param balance   initial account balance in CHF
+     */
+    public User(String lastname, String firstname, BigDecimal balance) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.balance = balance;
+    }
 
-	// --- GETTERS ET SETTERS ---
+    /** @return the current account balance in CHF */
+    public BigDecimal getBalance() { return balance; }
+    public void setBalance(BigDecimal balance) { this.balance = balance; }
 
-	public String getRole() {
-		return role;
-	}
+    /** @return the database primary key */
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public String getFirstname() { return firstname; }
+    public void setFirstname(String firstname) { this.firstname = firstname; }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getLastname() { return lastname; }
+    public void setLastname(String lastname) { this.lastname = lastname; }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
-
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getFirstname() {
-		return firstname;
-	}
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-	@Override
-	public String toString() {
-		return id + "-" + lastname + "-" + firstname + " (" + role + ")";
-	}
+    @Override
+    public String toString() {
+        return id + "-" + lastname + "-" + firstname;
+    }
 }

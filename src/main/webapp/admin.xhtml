@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/WEB-INF/templates/BasicTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div class="max-w-2xl mx-auto">
+
+            <div class="mb-8">
+                <h2 class="text-3xl font-extrabold tracking-tight text-white">Admin Panel</h2>
+                <p class="text-gray-400 text-sm mt-1">Add a new movie or series to the MarmotteMovie catalog.</p>
+            </div>
+
+            <h:panelGroup rendered="#{not empty adminBean.addResult}" layout="block"
+                          styleClass="mb-6 p-4 rounded-xl border text-sm font-medium #{adminBean.addResult.contains('succès') ? 'bg-green-950/60 border-green-800 text-green-300' : 'bg-red-950/60 border-red-800 text-red-300'}">
+                #{adminBean.addResult}
+            </h:panelGroup>
+
+            <div class="bg-[#1E1E1E] rounded-2xl border border-gray-800 p-8 shadow-2xl">
+
+                <h:form id="adminForm">
+                    <div class="space-y-6">
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Media Type</label>
+                            <h:selectOneMenu value="#{adminBean.mediaType}"
+                                             styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition cursor-pointer">
+                                <f:selectItem itemLabel="Movie (1-day rental)" itemValue="MOVIE" />
+                                <f:selectItem itemLabel="Serie (30-day rental)" itemValue="SERIE" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Title</label>
+                            <h:inputText value="#{adminBean.title}" required="true"
+                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                         placeholder="e.g. Inception"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Director</label>
+                            <h:inputText value="#{adminBean.director}" required="true"
+                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                         placeholder="e.g. Christopher Nolan"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Price (CHF)</label>
+                            <h:inputText value="#{adminBean.price}" required="true"
+                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                         placeholder="e.g. 3.90">
+                                <f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+                            </h:inputText>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Category</label>
+                            <h:selectOneMenu value="#{adminBean.categoryId}"
+                                             styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition cursor-pointer">
+                                <f:selectItem itemLabel="-- No category --" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{adminBean.categories}" var="cat"
+                                               itemLabel="#{cat.name}" itemValue="#{cat.id}"/>
+                            </h:selectOneMenu>
+                        </div>
+
+                        <div class="border-t border-gray-700 pt-6">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-4">Type-specific fields</p>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Duration (minutes) — Movie only</label>
+                                    <h:inputText value="#{adminBean.duration}"
+                                                 styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                                 placeholder="e.g. 148">
+                                        <f:convertNumber integerOnly="true"/>
+                                    </h:inputText>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Seasons — Serie only</label>
+                                        <h:inputText value="#{adminBean.seasons}"
+                                                     styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                                     placeholder="e.g. 5">
+                                            <f:convertNumber integerOnly="true"/>
+                                        </h:inputText>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Episodes — Serie only</label>
+                                        <h:inputText value="#{adminBean.episodes}"
+                                                     styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                                     placeholder="e.g. 62">
+                                            <f:convertNumber integerOnly="true"/>
+                                        </h:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <h:commandButton value="Add to Catalog"
+                                             action="#{adminBean.addMedia()}"
+                                             styleClass="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl text-sm transition shadow-lg cursor-pointer text-center block border-none uppercase tracking-wider"/>
+                        </div>
+
+                    </div>
+                </h:form>
+            </div>
+
+            <div class="mt-6 text-center">
+                <h:link value="Back to Catalog" outcome="catalog"
+                        styleClass="text-sm text-gray-400 hover:text-red-400 transition"/>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

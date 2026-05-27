@@ -1,6 +1,8 @@
 package ch.hevs.test;
 
-import java.sql.SQLException;
+import java.math.BigDecimal;
+
+
 
 import ch.hevs.businessobject.User;
 import org.junit.Test;
@@ -17,88 +19,64 @@ import junit.framework.TestCase;
 
 public class PopulateDB extends TestCase {
 
-	@Test
-	public void test() throws SQLException, ClassNotFoundException {
 
-		EntityTransaction tx = null;
-		try {
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("MarmottePU_unitTest");
-			EntityManager em = emf.createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
+    @Test
+    public void test() throws  ClassNotFoundException {
 
-			// 1. Création des Catégories (Requis pour les films et séries)
-			Category catAction = new Category();
-			catAction.setName("Action");
+        EntityTransaction tx = null;
+        try {
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("MarmottePU_unitTest");
+            EntityManager em = emf.createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
 
-			Category catSciFi = new Category();
-			catSciFi.setName("Science-Fiction");
+            // The password and role columns are intentionally not mapped in the User JPA entity
+            // (WildFly's login module reads them directly from SQL), so they are not generated
+            // by the drop-and-create schema action — add them manually here.
+            em.createNativeQuery("ALTER TABLE APPLICATION_USER ADD COLUMN password VARCHAR(255)").executeUpdate();
+            em.createNativeQuery("ALTER TABLE APPLICATION_USER ADD COLUMN role VARCHAR(50)").executeUpdate();
 
-			Category catDrama = new Category();
-			catDrama.setName("Drame");
+            // Categories
+            Category catAction = new Category("Action");
+            Category catSciFi  = new Category("Science-Fiction");
+            Category catDrama  = new Category("Drama");
 
-			em.persist(catAction);
-			em.persist(catSciFi);
-			em.persist(catDrama);
+            em.persist(catAction);
+            em.persist(catSciFi);
+            em.persist(catDrama);
 
-			// 2. Création des Films (Movies)
-			// Paramètres : Title, Director, Price, Category, Duration (minutes)
-			Movie m1 = new Movie("Inception", "Christopher Nolan", 4.90, catSciFi, 148);
-			Movie m2 = new Movie("The Dark Knight", "Christopher Nolan", 3.90, catAction, 152);
-			Movie m3 = new Movie("Interstellar", "Christopher Nolan", 4.90, catSciFi, 169);
-			Movie m4 = new Movie("Gladiator", "Ridley Scott", 2.90, catDrama, 155);
+            // Movies
+            em.persist(new Movie("Inception",       "Christopher Nolan", new BigDecimal("4.90"), catSciFi,  148));
+            em.persist(new Movie("The Dark Knight",  "Christopher Nolan", new BigDecimal("3.90"), catAction, 152));
+            em.persist(new Movie("Interstellar",     "Christopher Nolan", new BigDecimal("4.90"), catSciFi,  169));
+            em.persist(new Movie("Gladiator",        "Ridley Scott",      new BigDecimal("2.90"), catDrama,  155));
 
-			em.persist(m1);
-			em.persist(m2);
-			em.persist(m3);
-			em.persist(m4);
+            // Series
+            em.persist(new Serie("Breaking Bad",     "Vince Gilligan",      new BigDecimal("19.90"), catDrama,  5, 62));
+            em.persist(new Serie("Stranger Things",  "The Duffer Brothers", new BigDecimal("14.90"), catSciFi,  4, 34));
+            em.persist(new Serie("The Mandalorian",  "Jon Favreau",         new BigDecimal("12.90"), catAction, 3, 24));
 
-			// 3. Création des Séries (Series)
-			// Paramètres : Title, Director, Price, Category, Seasons, Episodes
-			Serie s1 = new Serie("Breaking Bad", "Vince Gilligan", 19.90, catDrama, 5, 62);
-			Serie s2 = new Serie("Stranger Things", "The Duffer Brothers", 14.90, catSciFi, 4, 34);
-			Serie s3 = new Serie("The Mandalorian", "Jon Favreau", 12.90, catAction, 3, 24);
+            // Users — business fields persisted via JPA; security fields (password, role)
+            // set via native SQL since they are WildFly's responsibility, not the entity's.
+            User luc    = new User("Dumoulin", "Luc",          new BigDecimal("100.00"));
+            User michel = new User("Platini",  "Michel",       new BigDecimal("100.00"));
+            User jp     = new User("Papin",    "Jean-Pierre",  new BigDecimal("1000.00"));
 
-			em.persist(s1);
-			em.persist(s2);
-			em.persist(s3);
+            em.persist(luc);
+            em.persist(michel);
+            em.persist(jp);
+            em.flush(); // force ID generation before the native UPDATE
 
-			// 4. Création des Utilisateurs (Viewers) avec mots de passe sécurisés
 
-			// Instanciation de l'algorithme PBKDF2 par défaut de Jakarta
-			com.sun.enterprise.security.ee.authentication.PredefinedPbkdf2PasswordHashImpl passwordHasher =
-					new com.sun.enterprise.security.ee.authentication.PredefinedPbkdf2PasswordHashImpl();
+            tx.commit();
+            System.out.println("Database successfully populated.");
 
-			// Configuration standard requise pour correspondre à Pbkdf2PasswordHash.class
-			java.util.Map<String, String> config = new java.util.HashMap<>();
-			config.put("Pbkdf2PasswordHash.Iterations", "2048");
-			config.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA256");
-			passwordHasher.initialize(config);
-
-			// Hachage des mots de passe en clair
-			String hashLuc = passwordHasher.generate("password123".toCharArray());
-			String hashMichel = passwordHasher.generate("admin2026".toCharArray());
-			String hashJean = passwordHasher.generate("compta456".toCharArray());
-
-			// Création des objets avec le constructeur mis à jour (nom, prénom, email, solde, mot de passe, rôle)
-			User c1 = new User("Dumoulin", "Luc", "luc@dumoulin.com", 100.0, hashLuc, "client");
-			User c2 = new User("Platini", "Michel", "michel@platini.com", 100.0, hashMichel, "manager");
-			User c3 = new User("Papin", "Jean-Pierre", "papin@jp.com", 1000.0, hashJean, "accountant");
-
-			em.persist(c1);
-			em.persist(c2);
-			em.persist(c3);
-
-			// Validation en base de données
-			tx.commit();
-			System.out.println("La base de données a été peuplée avec succès !");
-
-		} catch (Exception e) {
-			if (tx != null && tx.isActive()) {
-				tx.rollback(); // Annule tout en cas d'erreur
-			}
-			e.printStackTrace();
-		}
-	}
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
 }

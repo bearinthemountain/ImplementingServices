@@ -6,50 +6,54 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="content">
-        <div class="max-w-2xl mx-auto bg-[#1E1E1E] rounded-2xl border border-gray-800 p-8 shadow-2xl">
 
-            <div class="mb-8 text-center">
-                <span class="text-4xl">🍿</span>
-                <h2 class="text-3xl font-extrabold tracking-tight text-white mt-3">Rental Terminal</h2>
-                <p class="text-gray-400 text-sm mt-1">Select a user profile and the media asset to rent.</p>
-            </div>
+        <!-- Page title -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-extrabold tracking-tight text-white">Catalog</h2>
+            <p class="text-gray-400 text-sm mt-1">Browse and rent movies and series.</p>
+        </div>
 
-            <h:form id="rentalForm">
-                <div class="space-y-6">
+        <!-- Media grid -->
+        <h:panelGroup rendered="#{empty rentalBean.medias}" layout="block"
+                      styleClass="text-center py-16 text-gray-500">
+            No media available in the catalog yet.
+        </h:panelGroup>
 
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
-                            Select Viewer Profile
-                        </label>
-                        <h:selectOneMenu value="#{rentalBean.selectedViewerId}"
-                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition cursor-pointer">
-                            <f:selectItem itemLabel="-- Choose a Viewer --" itemValue="#{null}" noSelectionOption="true" />
-                            <f:selectItems value="#{rentalBean.viewers}" var="v"
-                                           itemLabel="#{v.firstname} #{v.lastname} (Wallet: $#{v.balance})" itemValue="#{v.id}" />
-                        </h:selectOneMenu>
-                    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <ui:repeat value="#{rentalBean.medias}" var="m">
+                <div class="bg-[#1E1E1E] border border-gray-800 rounded-2xl p-5 flex flex-col justify-between shadow hover:border-gray-600 transition">
 
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
-                            Select Movie or Serie
-                        </label>
-                        <h:selectOneMenu value="#{rentalBean.selectedMediaId}"
-                                         styleClass="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition cursor-pointer">
-                            <f:selectItem itemLabel="-- Choose a Media --" itemValue="#{null}" noSelectionOption="true" />
-                            <f:selectItems value="#{rentalBean.medias}" var="m"
-                                           itemLabel="#{m.title} - #{m.director} ($#{m.price})" itemValue="#{m.id}" />
-                        </h:selectOneMenu>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full border
+                                #{m.class.simpleName == 'Movie'
+                                    ? 'bg-blue-950/60 border-blue-800 text-blue-300'
+                                    : 'bg-purple-950/60 border-purple-800 text-purple-300'}">
+                                #{m.class.simpleName}
+                            </span>
+                            <span class="text-xs text-gray-500">#{m.rentalDurationInDays} day(s)</span>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-white leading-snug">#{m.title}</h3>
+                        <p class="text-sm text-gray-400 mt-1">#{m.director}</p>
                     </div>
 
-                    <div class="pt-4">
-                        <h:commandButton value="Confirm and Rent Content"
-                                         action="#{rentalBean.performRental()}"
-                                         styleClass="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl text-sm transition shadow-lg cursor-pointer text-center block border-none uppercase tracking-wider font-semibold" />
+                    <div class="mt-5 flex items-center justify-between">
+                        <span class="text-xl font-black text-red-400">CHF #{m.price}</span>
+
+                        <h:form>
+                            <h:commandButton value="Rent"
+                                             action="#{rentalBean.performRental()}"
+                                             styleClass="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2 rounded-xl text-sm border-none cursor-pointer transition">
+                                <f:setPropertyActionListener target="#{rentalBean.selectedMediaId}" value="#{m.id}"/>
+                            </h:commandButton>
+                        </h:form>
                     </div>
 
                 </div>
-            </h:form>
+            </ui:repeat>
         </div>
+
     </ui:define>
 
 </ui:composition>

@@ -42,17 +42,36 @@
   </welcome-file-list>
 
   <security-role>
-    <description>Users with an account</description>
-    <role-name>Users</role-name>
+    <description>Regular users who can rent media</description>
+    <role-name>client</role-name>
   </security-role>
   <security-role>
-    <role-name>Visitor</role-name>
-    <description>WebSite visitor</description>
+    <description>Manager with admin access to the catalog</description>
+    <role-name>manager</role-name>
   </security-role>
-  <security-role>
-    <role-name>Admin</role-name>
-    <description>Administrator access</description>
-  </security-role>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>User pages</web-resource-name>
+      <url-pattern>/catalog.xhtml</url-pattern>
+      <url-pattern>/rentals.xhtml</url-pattern>
+      <url-pattern>/showRentalResult.xhtml</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>client</role-name>
+      <role-name>manager</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Admin pages</web-resource-name>
+      <url-pattern>/admin.xhtml</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>manager</role-name>
+    </auth-constraint>
+  </security-constraint>
 
   <login-config>
     <auth-method>BASIC</auth-method>
