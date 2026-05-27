@@ -1,0 +1,103 @@
+@startuml layer-presentation
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor White
+  BorderColor #2C3E50
+  HeaderBackgroundColor #D6EAF8
+  FontName Arial
+}
+skinparam arrow {
+  Color #2C3E50
+}
+skinparam note {
+  BackgroundColor #FEF9E7
+  BorderColor #F39C12
+}
+
+title Presentation Layer — JSF Managed Beans
+
+' ══════════════════════════════════════════
+'  PRESENTATION (main layer)
+' ══════════════════════════════════════════
+class AdminBean <<@SessionScoped>> {
+  - mediaType : String
+  - title : String
+  - director : String
+  - price : BigDecimal
+  - categoryId : Long
+  - duration : int
+  - seasons : int
+  - episodes : int
+  - addResult : String
+  --
+  + addMedia() : String
+  + getCategories() : List<Category>
+  - resetForm() : void
+}
+
+class RentalBean <<@SessionScoped>> {
+  - selectedMediaId : Long
+  - transactionResult : String
+  --
+  + getLoggedInUser() : User
+  + performRental() : String
+  + getMyActiveRentals() : List<Rental>
+  + getMedias() : List<Media>
+}
+
+class MediaBean <<@SessionScoped>> {
+  --
+  + getMedias() : List<Media>
+}
+
+class UserBean <<@SessionScoped>> {
+  - users : List<User>
+  --
+  + getAllViewers() : List<User>
+}
+
+' ══════════════════════════════════════════
+'  SERVICE LAYER (external — simplified)
+' ══════════════════════════════════════════
+skinparam class {
+  BackgroundColor #F2F3F4
+  BorderColor #AAB7B8
+  HeaderBackgroundColor #EAECEE
+  FontColor #626567
+}
+
+class MediaService <<service>> {
+  + getAllMedia()
+  + saveMedia()
+  + refreshMedia()
+  + getAllCategories()
+  + getCategoryById()
+}
+
+class RentalService <<service>> {
+  + rentMedia()
+  + getActiveRentals()
+}
+
+class UserService <<service>> {
+  + getUserByPrincipal()
+  + getAllViewers()
+}
+
+' ══════════════════════════════════════════
+'  @Inject dependencies
+' ══════════════════════════════════════════
+AdminBean  --> MediaService  : @Inject
+MediaBean  --> MediaService  : @Inject
+RentalBean --> MediaService  : @Inject
+RentalBean --> RentalService : @Inject
+RentalBean --> UserService   : @Inject
+UserBean   --> UserService   : @Inject
+
+note bottom of RentalBean
+  Resolves authenticated user via
+  UserService.getUserByPrincipal(Principal)
+  — security logic stays in the service layer
+end note
+
+@enduml

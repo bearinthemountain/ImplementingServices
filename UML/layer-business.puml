@@ -1,0 +1,114 @@
+@startuml layer-business
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor White
+  BorderColor #1E8449
+  HeaderBackgroundColor #D5F5E3
+  FontName Arial
+}
+skinparam arrow {
+  Color #1E8449
+}
+skinparam note {
+  BackgroundColor #FEF9E7
+  BorderColor #F39C12
+}
+skinparam rectangle {
+  BackgroundColor #EAFAF1
+  BorderColor #1E8449
+  FontColor #1E8449
+}
+
+title Business / Service Layer — CDI Services
+
+' ══════════════════════════════════════════
+'  SERVICE LAYER (main layer)
+' ══════════════════════════════════════════
+class MediaService <<@ApplicationScoped>> {
+  - em : EntityManager
+  --
+  + getAllMedia() : List<Media>
+  + saveMedia(Media) : void
+  + refreshMedia() : List<Media>
+  + getAllCategories() : List<Category>
+  + getCategoryById(Long) : Category
+}
+
+rectangle "JTA Transaction Boundary  (@Transactional)" as TX {
+
+  class RentalService <<@RequestScoped>> {
+    - em : EntityManager
+    --
+    + {method} <b>@Transactional</b> rentMedia(Long, Long) : void
+    + getViewerById(Long) : User
+    + getActiveRentals(Long) : List<Rental>
+  }
+
+}
+
+class UserService <<@RequestScoped>> {
+  - em : EntityManager
+  --
+  + getAllViewers() : List<User>
+  + getUserByPrincipal(Principal) : User
+  + getUserByLastname(String) : User
+}
+
+class RentalException {
+  - reason : Reason
+  --
+  + getReason() : Reason
+}
+
+enum Reason {
+  USER_NOT_FOUND
+  MEDIA_NOT_FOUND
+  ALREADY_RENTED
+  INSUFFICIENT_FUNDS
+}
+
+RentalException +-- Reason
+RentalService   ..> RentalException : <<throws>>
+
+' ══════════════════════════════════════════
+'  ENTITY LAYER (external — simplified)
+' ══════════════════════════════════════════
+skinparam class {
+  BackgroundColor #F2F3F4
+  BorderColor #AAB7B8
+  HeaderBackgroundColor #EAECEE
+  FontColor #626567
+}
+
+class Media    <<entity>>
+class Category <<entity>>
+class User     <<entity>>
+class Rental   <<entity>>
+
+' ══════════════════════════════════════════
+'  Usage arrows (service → entity)
+' ══════════════════════════════════════════
+MediaService  ..> Media    : uses
+MediaService  ..> Category : uses
+RentalService ..> User     : uses
+RentalService ..> Media    : uses
+RentalService ..> Rental   : uses
+UserService   ..> User     : uses
+
+note right of TX
+  <b>@Transactional</b> (JTA — propagation REQUIRED)
+  Atomic commit or full rollback.
+  EntityManager is transaction-scoped:
+  its lifecycle is tied to the active transaction.
+end note
+
+note bottom of RentalService
+  rentMedia() atomically:
+  1. Find user & media
+  2. Check no active duplicate
+  3. Check sufficient balance
+  4. Deduct balance (dirty-checking)
+  5. Persist Rental record
+end note
+
+@enduml

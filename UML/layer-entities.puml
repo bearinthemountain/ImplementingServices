@@ -1,0 +1,118 @@
+@startuml layer-entities
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor White
+  BorderColor #7D3C98
+  HeaderBackgroundColor #E8DAEF
+  FontName Arial
+}
+skinparam arrow {
+  Color #7D3C98
+}
+skinparam note {
+  BackgroundColor #FEF9E7
+  BorderColor #F39C12
+}
+
+title Entity Layer — JPA Entities
+
+' ══════════════════════════════════════════
+'  ENTITY LAYER (main layer)
+' ══════════════════════════════════════════
+abstract class Media <<@Entity>> {
+  - id : Long
+  - title : String
+  - director : String
+  - price : BigDecimal
+  --
+  + {abstract} getRentalDurationInDays() : int
+  + getPrice() : BigDecimal
+  + getTitle() : String
+  + getCategory() : Category
+}
+
+class Movie <<@Entity>> {
+  - duration : int
+  --
+  + getRentalDurationInDays() : int
+}
+note right of Movie : 1 day rental
+
+class Serie <<@Entity>> {
+  - seasons : int
+  - episodes : int
+  --
+  + getRentalDurationInDays() : int
+}
+note right of Serie : 30 days rental
+
+class Category <<@Entity>> {
+  - id : Long
+  - name : String
+  --
+  + getName() : String
+}
+
+class User <<@Entity>> {
+  - id : long
+  - lastname : String
+  - firstname : String
+  - balance : BigDecimal
+  --
+  + getBalance() : BigDecimal
+  + setBalance(BigDecimal) : void
+}
+note right of User
+  Table: APPLICATION_USER
+  password & role managed by WildFly
+  — not mapped in JPA
+end note
+
+class Rental <<@Entity>> {
+  - id : Long
+  - rentalStart : LocalDateTime
+  - rentalEnd : LocalDateTime
+  - appliedPrice : BigDecimal
+  --
+  + isExpired() : boolean
+}
+note bottom of Rental
+  appliedPrice = price snapshot at
+  rental time, independent of
+  future catalogue changes
+end note
+
+' Inheritance
+Media <|-- Movie
+Media <|-- Serie
+
+' Associations (no multiplicity)
+Media  --> Category : category
+Rental --> User     : user
+Rental --> Media    : media
+
+' ══════════════════════════════════════════
+'  SERVICE LAYER (external — simplified)
+' ══════════════════════════════════════════
+skinparam class {
+  BackgroundColor #F2F3F4
+  BorderColor #AAB7B8
+  HeaderBackgroundColor #EAECEE
+  FontColor #626567
+}
+
+class MediaService  <<service>>
+class RentalService <<service>>
+class UserService   <<service>>
+
+' ══════════════════════════════════════════
+'  Usage arrows (service → entity)
+' ══════════════════════════════════════════
+MediaService  ..> Media    : uses
+MediaService  ..> Category : uses
+RentalService ..> Rental   : uses
+RentalService ..> User     : uses
+RentalService ..> Media    : uses
+UserService   ..> User     : uses
+
+@enduml

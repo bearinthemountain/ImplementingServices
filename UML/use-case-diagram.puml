@@ -1,0 +1,57 @@
+@startuml use-case-diagram
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor White
+  BorderColor #444
+  ArrowColor #444
+}
+skinparam actor {
+  BackgroundColor #E8F4FD
+  BorderColor #2980B9
+}
+skinparam rectangle {
+  BackgroundColor #FAFAFA
+  BorderColor #888
+}
+
+left to right direction
+
+actor "Customer" as customer
+actor "Manager"  as manager
+
+manager --|> customer : inherits from
+
+rectangle "MarmotteMovie" {
+
+  ' ── Pages accessible to both roles ──
+  usecase "Browse catalog\n(catalog.xhtml)"              as UC1
+  usecase "Rent a media item\n(rentals.xhtml)"           as UC2
+  usecase "View active rentals\n(rentals.xhtml)"         as UC3
+
+  ' ── Manager-only pages ──
+  usecase "Add a movie\n(admin.xhtml)"                   as UC4
+  usecase "Add a series\n(admin.xhtml)"                  as UC5
+
+  ' ── Included sub use cases ──
+  usecase "Authenticate\n(HTTP Basic / MarmotteRealm)"  as UC0
+  usecase "Check balance"                                as UC2a
+  usecase "Check duplicate rental"                       as UC2b
+
+  UC1 ..> UC0  : <<include>>
+  UC2 ..> UC0  : <<include>>
+  UC3 ..> UC0  : <<include>>
+  UC4 ..> UC0  : <<include>>
+  UC5 ..> UC0  : <<include>>
+
+  UC2 ..> UC2a : <<include>>
+  UC2 ..> UC2b : <<include>>
+}
+
+customer --> UC1
+customer --> UC2
+customer --> UC3
+
+manager --> UC4
+manager --> UC5
+
+@enduml
