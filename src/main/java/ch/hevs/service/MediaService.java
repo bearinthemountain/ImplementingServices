@@ -49,6 +49,7 @@ public class MediaService {
      *
      * @param media the media entity to save
      */
+    @Transactional
     public void saveMedia(Media media) {
         em.persist(media);
     }
