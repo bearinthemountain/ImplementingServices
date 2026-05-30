@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/WEB-INF/templates/BasicTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="content">
+        <div class="max-w-md mx-auto mt-16 text-center">
+
+            <div class="bg-[#1E1E1E] border border-red-900/50 rounded-2xl p-8 shadow-2xl">
+                <div class="text-red-500 text-5xl mb-4">⚠</div>
+
+                <h2 class="text-2xl font-bold text-white mb-2">Login Failed</h2>
+                <p class="text-gray-400 mb-8">
+                    The username or password you entered is incorrect. Please try again.
+                </p>
+
+                <h:link value="Back to Login" outcome="login"
+                        styleClass="inline-block bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition"/>
+            </div>
+
+        </div>
+    </ui:define>
+
+</ui:composition>
