@@ -1,55 +1,46 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>MarmotteMovie — Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#121212] text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/WEB-INF/templates/BasicTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-    <header class="border-b border-gray-800 bg-[#1E1E1E] px-6 py-4">
-        <span class="text-2xl font-black tracking-wider text-red-500 uppercase">MarmotteMovie</span>
-    </header>
+    <ui:define name="content">
+        <div class="max-w-sm mx-auto mt-16">
 
-    <main class="flex-1 flex items-center justify-center px-4 py-16">
-        <div class="w-full max-w-sm bg-[#1E1E1E] border border-gray-800 rounded-2xl p-8 shadow-2xl">
+            <div class="bg-[#1E1E1E] border border-gray-800 rounded-2xl p-8 shadow-2xl">
+                <h2 class="text-2xl font-extrabold text-white mb-1">Sign in</h2>
+                <p class="text-gray-400 text-sm mb-8">Access your MarmotteMovie account.</p>
 
-            <h2 class="text-2xl font-extrabold text-white mb-1">Sign in</h2>
-            <p class="text-gray-400 text-sm mb-8">Access your MarmotteMovie account.</p>
+                <form method="post" action="j_security_check">
+                    <div class="space-y-5">
 
-            <!-- j_security_check est le point d'entrée WildFly pour l'auth FORM -->
-            <form method="post" action="j_security_check">
-                <div class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2"
+                                   for="username">Username</label>
+                            <input id="username" name="j_username" type="text" required="required"
+                                   class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                   placeholder="Your username"/>
+                        </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2"
-                               for="username">Name</label>
-                        <input id="username" name="j_username" type="text" required="required"
-                               class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
-                               placeholder="e.g. Dumoulin"/>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2"
+                                   for="password">Password</label>
+                            <input id="password" name="j_password" type="password" required="required"
+                                   class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
+                                   placeholder="••••••••"/>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm uppercase tracking-wider transition border-none cursor-pointer">
+                            Sign in
+                        </button>
                     </div>
+                </form>
+            </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2"
-                               for="password">Password</label>
-                        <input id="password" name="j_password" type="password" required="required"
-                               class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 font-medium focus:outline-none focus:border-red-500 transition"
-                               placeholder="••••••••"/>
-                    </div>
-
-                    <button type="submit"
-                            class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm uppercase tracking-wider transition border-none cursor-pointer">
-                        Sign in
-                    </button>
-
-                </div>
-            </form>
+            <div class="mt-6 text-center">
+                <p class="text-gray-500 text-sm">Need help? Contact the administrator.</p>
+            </div>
         </div>
-    </main>
+    </ui:define>
 
-    <footer class="border-t border-gray-800 py-6 text-center text-xs text-gray-600">
-        MarmotteMovie
-    </footer>
-
-</body>
-</html>
+</ui:composition>

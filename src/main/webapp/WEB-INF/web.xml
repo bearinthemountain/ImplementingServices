@@ -74,8 +74,11 @@
   </security-constraint>
 
   <login-config>
-    <auth-method>BASIC</auth-method>
-    <realm-name>MarmotteRealm</realm-name>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+      <form-login-page>/login.xhtml</form-login-page>
+      <form-error-page>/login-error.xhtml</form-error-page>
+    </form-login-config>
   </login-config>
   
 
