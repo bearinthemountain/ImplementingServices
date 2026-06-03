@@ -1,6 +1,13 @@
 package ch.hevs.businessobject;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,7 +47,7 @@ public class Rental {
      * transaction are propagated transparently without a separate merge call.
      * Loaded lazily to avoid unnecessary joins when only scalar fields are needed.
      */
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "viewer_id", nullable = false)
     private User user;
 
