@@ -1,5 +1,6 @@
 package ch.hevs.businessobject;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,7 +48,7 @@ public class Rental {
      * transaction are propagated transparently without a separate merge call.
      * Loaded lazily to avoid unnecessary joins when only scalar fields are needed.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "viewer_id", nullable = false)
     private User user;
 

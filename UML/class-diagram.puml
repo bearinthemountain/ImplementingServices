@@ -90,7 +90,7 @@ package "ch.hevs.businessobject" #FAFAFA {
   Media <|-- Movie
   Media <|-- Serie
   Media "0..*" --> "0..1" Category : category
-  Rental "0..*" --> "1" User    : user
+  Rental "0..*" --> "1" User    : user\ncascade PERSIST, MERGE
   Rental "0..*" --> "1" Media   : media
 }
 

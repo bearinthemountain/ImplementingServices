@@ -103,7 +103,7 @@ Media <|-- Serie
 
 ' Associations
 Media  "0..*" --> "0..1" Category : category\n@ManyToOne LAZY
-Rental "0..*" --> "1"    User     : viewer_id\n@ManyToOne LAZY
+Rental "0..*" --> "1"    User     : viewer_id\n@ManyToOne LAZY\ncascade PERSIST, MERGE
 Rental "0..*" --> "1"    Media    : media\n@ManyToOne LAZY
 
 ' ══════════════════════════════════════════
