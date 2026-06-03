@@ -34,14 +34,19 @@
                     <h:link value="Admin Panel" outcome="admin"
                             styleClass="text-sm font-semibold text-yellow-400 hover:text-yellow-300 transition"/>
                 </h:panelGroup>
-                <h:panelGroup rendered="#{rentalBean.loggedInUser != null}"
+                <h:panelGroup rendered="#{userBean.loggedInUser != null}"
                               styleClass="bg-gray-800 px-4 py-2 rounded-full flex items-center space-x-2">
-                    <span class="text-xs text-gray-400">#{rentalBean.loggedInUser.firstname} #{rentalBean.loggedInUser.lastname}</span>
+                    <span class="text-xs text-gray-400">#{userBean.loggedInUser.firstname} #{userBean.loggedInUser.lastname}</span>
                     <span class="text-xs text-gray-600">|</span>
                     <span class="text-xs text-gray-400">Wallet:</span>
                     <span class="text-sm font-bold text-green-400">
-                        CHF #{rentalBean.loggedInUser.balance}
+                        CHF #{userBean.loggedInUser.balance}
                     </span>
+                    <span class="text-xs text-gray-600">|</span>
+                    <h:form styleClass="inline-block m-0 p-0">
+                        <h:commandLink value="Logout" action="#{userBean.logout()}"
+                                       styleClass="text-xs text-red-400 hover:text-red-300 font-semibold transition"/>
+                    </h:form>
                 </h:panelGroup>
             </nav>
         </div>
