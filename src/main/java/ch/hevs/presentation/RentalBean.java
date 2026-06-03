@@ -46,23 +46,7 @@ public class RentalBean implements Serializable {
     private MediaService mediaService;
 
     @Inject
-    private UserService userService;
-
-    /** Injected to resolve the currently authenticated user from the security principal. */
-    @Inject
-    private HttpServletRequest request;
-
-    /**
-     * Resolves the currently authenticated user from the WildFly security principal.
-     *
-     * <p>Delegates entirely to {@link ch.hevs.service.UserService#getUserByPrincipal}
-     * so that the principal-to-user mapping stays in the service layer.</p>
-     *
-     * @return the authenticated {@link User}, or {@code null} if not authenticated
-     */
-    public User getLoggedInUser() {
-        return userService.getUserByPrincipal(request.getUserPrincipal());
-    }
+    private UserBean userBean;
 
     /**
      * Executes the rental for the selected media and the currently logged-in user.
@@ -71,7 +55,7 @@ public class RentalBean implements Serializable {
      * @return the JSF navigation outcome ({@code "showRentalResult"})
      */
     public String performRental() {
-        User loggedIn = getLoggedInUser();
+        User loggedIn = userBean.getLoggedInUser();
         if (loggedIn == null) {
             this.transactionResult = "Error: no authenticated user.";
             return "showRentalResult";
@@ -95,7 +79,7 @@ public class RentalBean implements Serializable {
      * @return list of active {@link Rental} entities, or an empty list if not authenticated
      */
     public List<Rental> getMyActiveRentals() {
-        User loggedIn = getLoggedInUser();
+        User loggedIn = userBean.getLoggedInUser();
         if (loggedIn == null) return Collections.emptyList();
         try {
             return rentalService.getActiveRentals(loggedIn.getId());
