@@ -33,7 +33,7 @@ rectangle "MarmotteMovie" {
   usecase "Add a series\n(admin.xhtml)"                  as UC5
 
   ' ── Included sub use cases ──
-  usecase "Authenticate\n(HTTP Basic / MarmotteRealm)"  as UC0
+  usecase "Authenticate\n(Form login / j_security_check\nlogin.xhtml)"  as UC0
   usecase "Check balance"                                as UC2a
   usecase "Check duplicate rental"                       as UC2b
 

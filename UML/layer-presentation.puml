@@ -38,6 +38,7 @@ class AdminBean <<@SessionScoped>> {
 class RentalBean <<@SessionScoped>> {
   - selectedMediaId : Long
   - transactionResult : String
+  - request : HttpServletRequest
   --
   + getLoggedInUser() : User
   + performRental() : String
@@ -48,12 +49,6 @@ class RentalBean <<@SessionScoped>> {
 class MediaBean <<@SessionScoped>> {
   --
   + getMedias() : List<Media>
-}
-
-class UserBean <<@SessionScoped>> {
-  - users : List<User>
-  --
-  + getAllViewers() : List<User>
 }
 
 ' ══════════════════════════════════════════
@@ -81,7 +76,7 @@ class RentalService <<service>> {
 
 class UserService <<service>> {
   + getUserByPrincipal()
-  + getAllViewers()
+  + getUserByLastname()
 }
 
 ' ══════════════════════════════════════════
@@ -92,12 +87,18 @@ MediaBean  --> MediaService  : @Inject
 RentalBean --> MediaService  : @Inject
 RentalBean --> RentalService : @Inject
 RentalBean --> UserService   : @Inject
-UserBean   --> UserService   : @Inject
 
 note bottom of RentalBean
   Resolves authenticated user via
-  UserService.getUserByPrincipal(Principal)
+  UserService.getUserByPrincipal(
+    HttpServletRequest.getUserPrincipal())
   — security logic stays in the service layer
+end note
+
+note bottom of AdminBean
+  addMedia() creates a Movie or Serie
+  depending on mediaType, then calls
+  mediaService.saveMedia(@Transactional)
 end note
 
 @enduml

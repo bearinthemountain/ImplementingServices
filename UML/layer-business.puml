@@ -24,17 +24,17 @@ title Business / Service Layer — CDI Services
 ' ══════════════════════════════════════════
 '  SERVICE LAYER (main layer)
 ' ══════════════════════════════════════════
-class MediaService <<@ApplicationScoped>> {
-  - em : EntityManager
-  --
-  + getAllMedia() : List<Media>
-  + saveMedia(Media) : void
-  + refreshMedia() : List<Media>
-  + getAllCategories() : List<Category>
-  + getCategoryById(Long) : Category
-}
-
 rectangle "JTA Transaction Boundary  (@Transactional)" as TX {
+
+  class MediaService <<@ApplicationScoped>> {
+    - em : EntityManager
+    --
+    + getAllMedia() : List<Media>
+    + {method} <b>@Transactional</b> saveMedia(Media) : void
+    + refreshMedia() : List<Media>
+    + getAllCategories() : List<Category>
+    + getCategoryById(Long) : Category
+  }
 
   class RentalService <<@RequestScoped>> {
     - em : EntityManager
@@ -49,7 +49,6 @@ rectangle "JTA Transaction Boundary  (@Transactional)" as TX {
 class UserService <<@RequestScoped>> {
   - em : EntityManager
   --
-  + getAllViewers() : List<User>
   + getUserByPrincipal(Principal) : User
   + getUserByLastname(String) : User
 }
@@ -109,6 +108,12 @@ note bottom of RentalService
   3. Check sufficient balance
   4. Deduct balance (dirty-checking)
   5. Persist Rental record
+end note
+
+note bottom of MediaService
+  saveMedia() wraps em.persist()
+  in its own @Transactional boundary
+  (propagation REQUIRED)
 end note
 
 @enduml

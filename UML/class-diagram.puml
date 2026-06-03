@@ -22,11 +22,13 @@ package "ch.hevs.businessobject" #FAFAFA {
     - firstname : String
     - balance : BigDecimal
     --
-    + getBalance() : BigDecimal
-    + setBalance(BigDecimal) : void
     + getId() : long
     + getLastname() : String
+    + setLastname(String) : void
     + getFirstname() : String
+    + setFirstname(String) : void
+    + getBalance() : BigDecimal
+    + setBalance(BigDecimal) : void
   }
 
   abstract class Media {
@@ -34,11 +36,14 @@ package "ch.hevs.businessobject" #FAFAFA {
     - title : String
     - director : String
     - price : BigDecimal
+    - category : Category
     --
     + {abstract} getRentalDurationInDays() : int
-    + getPrice() : BigDecimal
+    + getId() : Long
     + getTitle() : String
     + getDirector() : String
+    + getPrice() : BigDecimal
+    + getCategory() : Category
   }
 
   class Movie {
@@ -63,7 +68,9 @@ package "ch.hevs.businessobject" #FAFAFA {
     - id : Long
     - name : String
     --
+    + getId() : Long
     + getName() : String
+    + setName(String) : void
   }
 
   class Rental {
@@ -76,13 +83,15 @@ package "ch.hevs.businessobject" #FAFAFA {
     + getAppliedPrice() : BigDecimal
     + getRentalStart() : LocalDateTime
     + getRentalEnd() : LocalDateTime
+    + getUser() : User
+    + getMedia() : Media
   }
 
   Media <|-- Movie
   Media <|-- Serie
-  Media "0..*" -- "0..1" Category : category
-  Rental "0..*" -- "1" User    : user
-  Rental "0..*" -- "1" Media   : media
+  Media "0..*" --> "0..1" Category : category
+  Rental "0..*" --> "1" User    : user
+  Rental "0..*" --> "1" Media   : media
 }
 
 ' ══════════════════════════════════════════
@@ -116,7 +125,7 @@ package "ch.hevs.service" #FAFAFA {
     - em : EntityManager
     --
     + getAllMedia() : List<Media>
-    + saveMedia(Media) : void
+    + {method} <b>@Transactional</b> saveMedia(Media) : void
     + refreshMedia() : List<Media>
     + getAllCategories() : List<Category>
     + getCategoryById(Long) : Category
@@ -125,7 +134,7 @@ package "ch.hevs.service" #FAFAFA {
   class RentalService <<@RequestScoped>> {
     - em : EntityManager
     --
-    + rentMedia(Long, Long) : void
+    + {method} <b>@Transactional</b> rentMedia(Long, Long) : void
     + getViewerById(Long) : User
     + getActiveRentals(Long) : List<Rental>
   }
@@ -133,7 +142,6 @@ package "ch.hevs.service" #FAFAFA {
   class UserService <<@RequestScoped>> {
     - em : EntityManager
     --
-    + getAllViewers() : List<User>
     + getUserByPrincipal(Principal) : User
     + getUserByLastname(String) : User
   }
@@ -155,14 +163,17 @@ package "ch.hevs.presentation" #FAFAFA {
     - duration : int
     - seasons : int
     - episodes : int
+    - addResult : String
     --
     + addMedia() : String
     + getCategories() : List<Category>
+    - resetForm() : void
   }
 
   class RentalBean <<@SessionScoped>> {
     - selectedMediaId : Long
     - transactionResult : String
+    - request : HttpServletRequest
     --
     + getLoggedInUser() : User
     + performRental() : String
@@ -175,18 +186,11 @@ package "ch.hevs.presentation" #FAFAFA {
     + getMedias() : List<Media>
   }
 
-  class UserBean <<@SessionScoped>> {
-    - users : List<User>
-    --
-    + getAllViewers() : List<User>
-  }
-
   AdminBean  --> MediaService  : @Inject
   RentalBean --> RentalService : @Inject
   RentalBean --> MediaService  : @Inject
   RentalBean --> UserService   : @Inject
   MediaBean  --> MediaService  : @Inject
-  UserBean   --> UserService   : @Inject
 }
 
 @enduml

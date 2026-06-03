@@ -19,15 +19,18 @@ title Entity Layer — JPA Entities
 ' ══════════════════════════════════════════
 '  ENTITY LAYER (main layer)
 ' ══════════════════════════════════════════
-abstract class Media <<@Entity>> {
+abstract class Media <<@Entity\n@Inheritance(JOINED)>> {
   - id : Long
   - title : String
   - director : String
   - price : BigDecimal
+  - category : Category
   --
   + {abstract} getRentalDurationInDays() : int
-  + getPrice() : BigDecimal
+  + getId() : Long
   + getTitle() : String
+  + getDirector() : String
+  + getPrice() : BigDecimal
   + getCategory() : Category
 }
 
@@ -35,6 +38,7 @@ class Movie <<@Entity>> {
   - duration : int
   --
   + getRentalDurationInDays() : int
+  + getDuration() : int
 }
 note right of Movie : 1 day rental
 
@@ -43,6 +47,8 @@ class Serie <<@Entity>> {
   - episodes : int
   --
   + getRentalDurationInDays() : int
+  + getSeasons() : int
+  + getEpisodes() : int
 }
 note right of Serie : 30 days rental
 
@@ -50,22 +56,27 @@ class Category <<@Entity>> {
   - id : Long
   - name : String
   --
+  + getId() : Long
   + getName() : String
 }
 
-class User <<@Entity>> {
+class User <<@Entity\n@Table(APPLICATION_USER)>> {
   - id : long
   - lastname : String
   - firstname : String
   - balance : BigDecimal
   --
+  + getId() : long
+  + getLastname() : String
+  + getFirstname() : String
   + getBalance() : BigDecimal
   + setBalance(BigDecimal) : void
 }
 note right of User
   Table: APPLICATION_USER
-  password & role managed by WildFly
-  — not mapped in JPA
+  password & role NOT mapped in JPA
+  — WildFly reads them directly via
+  j_security_check (form login)
 end note
 
 class Rental <<@Entity>> {
@@ -73,8 +84,12 @@ class Rental <<@Entity>> {
   - rentalStart : LocalDateTime
   - rentalEnd : LocalDateTime
   - appliedPrice : BigDecimal
+  - user : User
+  - media : Media
   --
   + isExpired() : boolean
+  + getUser() : User
+  + getMedia() : Media
 }
 note bottom of Rental
   appliedPrice = price snapshot at
@@ -86,10 +101,10 @@ end note
 Media <|-- Movie
 Media <|-- Serie
 
-' Associations (no multiplicity)
-Media  --> Category : category
-Rental --> User     : user
-Rental --> Media    : media
+' Associations
+Media  "0..*" --> "0..1" Category : category\n@ManyToOne LAZY
+Rental "0..*" --> "1"    User     : viewer_id\n@ManyToOne LAZY
+Rental "0..*" --> "1"    Media    : media\n@ManyToOne LAZY
 
 ' ══════════════════════════════════════════
 '  SERVICE LAYER (external — simplified)
