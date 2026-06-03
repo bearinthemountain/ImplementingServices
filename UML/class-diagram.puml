@@ -126,7 +126,6 @@ package "ch.hevs.service" #FAFAFA {
     --
     + getAllMedia() : List<Media>
     + {method} <b>@Transactional</b> saveMedia(Media) : void
-    + refreshMedia() : List<Media>
     + getAllCategories() : List<Category>
     + getCategoryById(Long) : Category
   }
@@ -135,7 +134,6 @@ package "ch.hevs.service" #FAFAFA {
     - em : EntityManager
     --
     + {method} <b>@Transactional</b> rentMedia(Long, Long) : void
-    + getViewerById(Long) : User
     + getActiveRentals(Long) : List<Rental>
   }
 

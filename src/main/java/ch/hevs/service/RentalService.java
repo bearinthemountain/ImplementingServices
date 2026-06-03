@@ -89,16 +89,6 @@ public class RentalService {
     }
 
     /**
-     * Retrieves a user by their primary key.
-     *
-     * @param viewerId the user's ID
-     * @return the {@link User}, or {@code null} if not found
-     */
-    public User getViewerById(Long viewerId) {
-        return em.find(User.class, viewerId);
-    }
-
-    /**
      * Returns all currently active rentals for the given user.
      * <p>
      * Uses {@code JOIN FETCH} to eagerly load the associated media within a single query,

@@ -55,19 +55,6 @@ public class MediaService {
     }
 
     /**
-     * Reloads the media list from the database, bypassing the first-level cache.
-     *
-     * <p>Clears the persistence context before querying so that any cached entity
-     * snapshots are discarded and fresh data is loaded from the database.</p>
-     *
-     * @return an up-to-date list of all {@link Media} entities
-     */
-    public List<Media> refreshMedia() {
-        em.clear();
-        return getAllMedia();
-    }
-
-    /**
      * Returns all categories available in the catalogue.
      *
      * @return list of all {@link Category} entities

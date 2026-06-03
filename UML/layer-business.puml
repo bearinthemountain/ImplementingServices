@@ -31,7 +31,6 @@ rectangle "JTA Transaction Boundary  (@Transactional)" as TX {
     --
     + getAllMedia() : List<Media>
     + {method} <b>@Transactional</b> saveMedia(Media) : void
-    + refreshMedia() : List<Media>
     + getAllCategories() : List<Category>
     + getCategoryById(Long) : Category
   }
@@ -40,7 +39,6 @@ rectangle "JTA Transaction Boundary  (@Transactional)" as TX {
     - em : EntityManager
     --
     + {method} <b>@Transactional</b> rentMedia(Long, Long) : void
-    + getViewerById(Long) : User
     + getActiveRentals(Long) : List<Rental>
   }
 
